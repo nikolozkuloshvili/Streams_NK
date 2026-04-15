@@ -23,7 +23,7 @@ static class TxtFileHelper
             {
                 number = new string(symbols).Replace("\0", null);
 
-                if (number.Equals("") || number.Equals("\t"))
+                if (number == "" || number == "\t")
                     continue;
 
                 sum += int.Parse(number);
@@ -37,6 +37,9 @@ static class TxtFileHelper
         }
 
         number = new string(symbols).Replace("\0", "");
+        if (number == "" || number == "\t")
+            return sum;
+
         sum += int.Parse(number);
 
         return sum;
