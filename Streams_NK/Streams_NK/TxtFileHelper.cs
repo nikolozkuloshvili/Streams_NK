@@ -2,7 +2,7 @@
 
 static class TxtFileHelper
 {
-    public static int NumberSummer(string path)
+    public static double NumberSummer(string path)
     {
         string text = File.ReadAllText(path);
 
@@ -15,7 +15,7 @@ static class TxtFileHelper
         string number;
 
         int count = 0;
-        int sum = 0;
+        double sum = 0;
 
         for (int i = 0; i < text.Length; i++)
         {
@@ -40,7 +40,7 @@ static class TxtFileHelper
         if (number == "" || number == "\t")
             return sum;
 
-        sum += int.Parse(number);
+        sum += double.Parse(number);
 
         return sum;
     }
