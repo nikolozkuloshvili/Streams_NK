@@ -7,26 +7,24 @@ internal class Program
 
     static void Main()
     {
-        StreamReader read = new StreamReader(ReadPath);
-        StreamWriter write = new StreamWriter(WritePath);
-
-        string text = File.ReadAllText(ReadPath);
-        TxtFileHelper.TextNumberingHelper(read, write);
-
+        TxtFileHelper.Rewrite_NumberLinesText_ToNewTextFile(ReadPath, WritePath);
         string copiedText = File.ReadAllText(WritePath);
-        Console.WriteLine(copiedText);
+
+        Console.WriteLine($"Rewriten text to New Text File\n{copiedText}");
+        
+        Console.WriteLine($"Total amount of Characters = {TxtFileHelper.GetAmountOf_Charachters_InTextFile(ReadPath)}");
         Console.WriteLine();
 
-        Console.WriteLine($"Total amount of Characters = {TxtFileHelper.LettersAndSymbols_Counter(ReadPath)}");
+        Console.WriteLine($"Total amount of Words = {TxtFileHelper.GetAmountOf_Words_InTextFile(ReadPath)}");
         Console.WriteLine();
 
-        Console.WriteLine($"Total amount of Words = {TxtFileHelper.WordCounter(ReadPath)}");
+        Console.WriteLine($"Sum of Numbers = {TxtFileHelper.GetNumbers_Sum_FromTextFile(ReadPath)}");
         Console.WriteLine();
 
-        Console.WriteLine($"Sum of Numbers = {TxtFileHelper.NumberSummer(ReadPath)}");
-        Console.WriteLine();
+        var list = TxtFileHelper.GetSorted_List_OfEachCharacterAmounts_InTextFile(ReadPath);
+        foreach (var item in list)
+            Console.WriteLine($"{item.Name} = {item.Count}");
 
-        TxtFileHelper.EachUnique_Char_Counter(ReadPath);
         Console.WriteLine();
     }
 }

@@ -2,32 +2,27 @@
 
 static class TxtFileHelper
 {
-    public static double NumberSummer(string path)
+    public static double GetNumbers_Sum_FromTextFile(string path)
     {
         string text = File.ReadAllText(path);
+        double sum = 0;
+        string number;
 
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentNullException(nameof(text));
 
-        ValidateFile_HasOnly_Numbers(text);
-
         char[] symbols = new char[text.Length];
-        string number;
-
-        int count = 0;
-        double sum = 0;
 
         for (int i = 0; i < text.Length; i++)
         {
-            if (!IsSymbol_Or_Letter(text[i]))
+            if (!IsNumber(text[i]) && !IsFloat_Or_Negative(text[i]))
             {
                 number = new string(symbols).Replace("\0", null);
 
                 if (number == "" || number == "\t")
                     continue;
 
-                sum += int.Parse(number);
-                count++;
+                sum += double.Parse(number);
 
                 Array.Clear(symbols);
                 continue;
@@ -45,8 +40,11 @@ static class TxtFileHelper
         return sum;
     }
 
-    public static void TextNumberingHelper(StreamReader reader, StreamWriter writer)
+    public static void Rewrite_NumberLinesText_ToNewTextFile(string pathRead, string pathWrite)
     {
+        StreamReader reader = new StreamReader(pathRead);
+        StreamWriter writer = new StreamWriter(pathWrite);
+
         int i = 1;
         while (!reader.EndOfStream)
         {
@@ -55,7 +53,7 @@ static class TxtFileHelper
         writer.Close();
     }
 
-    public static int LettersAndSymbols_Counter(string path)
+    public static int GetAmountOf_Charachters_InTextFile(string path)
     {
         string text = File.ReadAllText(path);
 
@@ -73,7 +71,7 @@ static class TxtFileHelper
         return symbolsCount;
     }
 
-    public static int WordCounter(string path)
+    public static int GetAmountOf_Words_InTextFile(string path)
     {
         string text = File.ReadAllText(path);
 
@@ -99,14 +97,14 @@ static class TxtFileHelper
         return count;
     }
 
-    public static void EachUnique_Char_Counter(string path)
+    public static List<Symbol> GetSorted_List_OfEachCharacterAmounts_InTextFile(string path)
     {
         string text = File.ReadAllText(path);
 
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentNullException(nameof(text));
 
-        char[] symbols = GetCharsFromString(text);
+        char[] symbols = Get_CharsArray_FromString(text);
 
         int count = 0;
 
@@ -130,22 +128,25 @@ static class TxtFileHelper
                 list.Add(new Symbol(symbols[i], count));
             }
         }
-
         list.Sort();
-        foreach (var item in list)
-            Console.WriteLine($"{item.Name} = {item.Count}");
+
+        return list;
     }
 
-    private static void ValidateFile_HasOnly_Numbers(string text)
+    private static bool IsNumber(char text)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            throw new ArgumentNullException(nameof(text));
+        if (text >= '0' && text <= '9')
+            return true;
 
-        for (int i = 0; i < text.Length; i++)
-        {
-            if (!(IsNumber(text[i]) || IsSymbol_Or_Letter(text[i])))
-                throw new InvalidDataException();
-        }
+        return false;
+    }
+
+    private static bool IsFloat_Or_Negative(char text)
+    {
+        if (text == ',' || text == '-')
+            return true;
+
+        return false;
     }
 
     private static bool IsSymbol_Or_Letter(char text)
@@ -156,15 +157,7 @@ static class TxtFileHelper
         return true;
     }
 
-    private static bool IsNumber(char? text)
-    {
-        if (text >= '0' && text <= '9')
-            return false;
-
-        return true;
-    }
-
-    private static char[] GetCharsFromString(string text)
+    private static char[] Get_CharsArray_FromString(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentNullException(nameof(text));
