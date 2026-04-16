@@ -133,29 +133,11 @@ static class TxtFileHelper
         return list;
     }
 
-    private static bool IsNumber(char text)
-    {
-        if (text >= '0' && text <= '9')
-            return true;
+    private static bool IsNumber(char text) => (text >= '0' && text <= '9');
 
-        return false;
-    }
+    private static bool IsFloat_Or_Negative(char text) => (text == ',' || text == '-');
 
-    private static bool IsFloat_Or_Negative(char text)
-    {
-        if (text == ',' || text == '-')
-            return true;
-
-        return false;
-    }
-
-    private static bool IsSymbol_Or_Letter(char text)
-    {
-        if (text == 32 || text == 10 || text == 13 || text == 0 || text == 9)
-            return false;
-
-        return true;
-    }
+    private static bool IsSymbol_Or_Letter(char text) => !(text == ' ' || text == '\n' || text == '\r' || text == '\t' || text == 0); //0 = null
 
     private static char[] Get_CharsArray_FromString(string text)
     {

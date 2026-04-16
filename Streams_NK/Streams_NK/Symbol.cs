@@ -10,8 +10,5 @@ public class Symbol : IComparable<Symbol>
         Count = count;
     }
 
-    public int CompareTo(Symbol? other)
-    {
-        return other!.Count.CompareTo(Count);
-    }
+    public int CompareTo(Symbol? other) => other!.Count.CompareTo(Count);
 }

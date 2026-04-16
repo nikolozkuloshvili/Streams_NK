@@ -24,7 +24,5 @@ internal class Program
         var list = TxtFileHelper.GetSorted_List_OfEachCharacterAmounts_InTextFile(ReadPath);
         foreach (var item in list)
             Console.WriteLine($"{item.Name} = {item.Count}");
-
-        Console.WriteLine();
     }
 }
