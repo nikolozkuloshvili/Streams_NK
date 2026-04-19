@@ -7,22 +7,25 @@ internal class Program
 
     static void Main()
     {
-        TxtFileHelper.Rewrite_NumberLinesText_ToNewTextFile(ReadPath, WritePath);
+        FileStream read = new FileStream(ReadPath, FileMode.Open, FileAccess.Read);
+        FileStream write = new FileStream(WritePath, FileMode.Open, FileAccess.Write);
+
+        StreamHelper.RewriteWithLineNumbersToNewStream(read, write);
         string copiedText = File.ReadAllText(WritePath);
 
         Console.WriteLine($"Rewriten text to New Text File\n{copiedText}");
-        
-        Console.WriteLine($"Total amount of Characters = {TxtFileHelper.GetAmountOf_Charachters_InTextFile(ReadPath)}");
+        StreamHelper.GetCharachtersCount(read);
+        StreamHelper.GetCharachtersCount(read);
+        Console.WriteLine($"Total amount of Characters = {StreamHelper.GetCharachtersCount(read)}");
+        Console.WriteLine();
+        StreamHelper.GetWordsCount(read);
+        Console.WriteLine($"Total amount of Words = {StreamHelper.GetWordsCount(read)}");
         Console.WriteLine();
 
-        Console.WriteLine($"Total amount of Words = {TxtFileHelper.GetAmountOf_Words_InTextFile(ReadPath)}");
+        Console.WriteLine($"Sum of Numbers = {StreamHelper.GetNumbersSum(read)}");
         Console.WriteLine();
-
-        Console.WriteLine($"Sum of Numbers = {TxtFileHelper.GetNumbers_Sum_FromTextFile(ReadPath)}");
-        Console.WriteLine();
-
-        var list = TxtFileHelper.GetSorted_List_OfEachCharacterAmounts_InTextFile(ReadPath);
-        foreach (var item in list)
-            Console.WriteLine($"{item.Name} = {item.Count}");
+        var dictionary = StreamHelper.ToCharacterDictionarySortedByCount(read);
+        foreach (var item in dictionary)
+            Console.WriteLine($"{item.Key} = {item.Value}");
     }
 }
