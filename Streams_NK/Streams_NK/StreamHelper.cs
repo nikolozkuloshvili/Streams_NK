@@ -4,139 +4,189 @@ static class StreamHelper
 {
     public static double GetNumbersSum(Stream stream)
     {
-        IsNotNullAndIsReadable(stream);
-
-        var originalPosition = stream.Position;
-        stream.Seek(0, SeekOrigin.Begin);
-
         double sum = 0;
-        StreamReader reader = new StreamReader(stream, leaveOpen: true);
-        while (!reader.EndOfStream)
+        try
         {
-            if (double.TryParse(reader.ReadLine()!, out double number))
-                sum += number;
+            IsNotNullAndIsReadable(stream);
+            var originalPosition = stream.Position;
+            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                while (!reader.EndOfStream)
+                {
+                    if (double.TryParse(reader.ReadLine()!, out double number))
+                        sum += number;
+                }
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+            }
+            finally
+            {
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+                reader.Close();
+            }
         }
-        stream.Seek(originalPosition, SeekOrigin.Begin);
-        reader.Close();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not calculate sum:\n Error: {ex.Message}");
+        }
 
         return sum;
     }
 
     public static void RewriteWithLineNumbersToNewStream(Stream read, Stream write)
     {
-        IsNotNullAndIsReadable(read);
-
-        if (write == null)
-            throw new ArgumentNullException(nameof(write));
-
-        if (!write.CanWrite)
-            throw new ArgumentException("The stream must be writable.", nameof(write));
-
-        StreamReader reader = new StreamReader(read, leaveOpen: true);
-        StreamWriter writer = new StreamWriter(write);
-        var originalPosition = read.Position;
-        read.Seek(0, SeekOrigin.Begin);
-
-        int i = 1;
-        while (!reader.EndOfStream)
+        try
         {
-            writer.WriteLine($"{i++}.{reader.ReadLine()}");
-        }
-        read.Seek(originalPosition, SeekOrigin.Begin);
+            IsNotNullAndIsReadable(read);
+            IsNotNullAndIsWritable(write);
 
-        writer.Close(); reader.Close();
+            var originalPosition = read.Position;
+
+            StreamReader reader = new StreamReader(read, leaveOpen: true);
+            StreamWriter writer = new StreamWriter(write);
+            try
+            {
+                read.Seek(0, SeekOrigin.Begin);
+
+                int i = 1;
+                while (!reader.EndOfStream)
+                {
+                    writer.WriteLine($"{i++}.{reader.ReadLine()}");
+                }
+                read.Seek(originalPosition, SeekOrigin.Begin);
+            }
+            finally
+            {
+                read.Seek(originalPosition, SeekOrigin.Begin);
+                reader.Close(); writer.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not rewrite to new stream:\n Error: {ex.Message}");
+        }
     }
 
     public static int GetCharachtersCount(Stream stream)
     {
-        IsNotNullAndIsReadable(stream);
-
-        StreamReader reader = new StreamReader(stream, leaveOpen: true);
-
         int symbolsCount = 0; int whiteSpaceCount = 0;
-        var originalPosition = stream.Position;
-        stream.Seek(0, SeekOrigin.Begin);
-
-        while (!reader.EndOfStream)
+        try
         {
-            string text = reader.ReadLine()!;
-            symbolsCount += text.Length;
-            for (int i = 0; i < text.Length; i++)
+            IsNotNullAndIsReadable(stream);
+
+            var originalPosition = stream.Position;
+
+            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            try
             {
-                if (IsWhiteSpaceCharacter(text[i]))
-                    whiteSpaceCount++;
+                stream.Seek(0, SeekOrigin.Begin);
+                while (!reader.EndOfStream)
+                {
+                    string text = reader.ReadLine()!;
+                    symbolsCount += text.Length;
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (IsWhiteSpaceCharacter(text[i]))
+                            whiteSpaceCount++;
+                    }
+                }
+            }
+            finally
+            {
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+                reader.Close();
             }
         }
-        stream.Seek(originalPosition, SeekOrigin.Begin);
-        reader.Close();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not count characters:\n Error: {ex.Message}");
+        }
 
         return symbolsCount - whiteSpaceCount;
     }
 
     public static int GetWordsCount(Stream stream)
     {
-        IsNotNullAndIsReadable(stream);
-
-        StreamReader reader = new StreamReader(stream, leaveOpen: true);
-        var originalPosition = stream.Position;
-        stream.Seek(0, SeekOrigin.Begin);
-
         int count = 0;
-        while (!reader.EndOfStream)
+        try
         {
-            string[] text = reader.ReadLine()!.Split(new char[] { ' ', '\n', '\r', '\t', '\0' }, StringSplitOptions.RemoveEmptyEntries);
-            count += text.Length;
-        }
+            IsNotNullAndIsReadable(stream);
 
-        stream.Seek(originalPosition, SeekOrigin.Begin);
-        reader.Close();
+            var originalPosition = stream.Position;
+
+            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+
+                while (!reader.EndOfStream)
+                {
+                    string[] text = reader.ReadLine()!.Split(new char[] { ' ', '\n', '\r', '\t', '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                    count += text.Length;
+                }
+            }
+            finally
+            {
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+                reader.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not count words:\n Error: {ex.Message}");
+        }
 
         return count;
     }
 
-    public static IDictionary<char, int> ToCharacterDictionarySortedByCount(Stream stream)
+    public static IDictionary<char, int> ToCharDictionarySortedByCount(Stream stream)
     {
-        IsNotNullAndIsReadable(stream);
-
-        StreamReader reader = new StreamReader(stream, leaveOpen: true);
-        var originalPosition = stream.Position;
-        stream.Seek(0, SeekOrigin.Begin);
-
-        int count = 0;
-
         SortedDictionary<char, int> dictionary = new SortedDictionary<char, int>();
 
-        string text = null!;
-        while (!reader.EndOfStream)
+        try
         {
-            text += reader.ReadLine()!;
-            if (reader.EndOfStream)
+            IsNotNullAndIsReadable(stream);
+
+            var originalPosition = stream.Position;
+
+            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            try
             {
-                char[] temp = text.ToCharArray();
-                for (int i = 0; i < temp.Length; i++)
+                stream.Seek(0, SeekOrigin.Begin);
+                string text = null!;
+
+                while (!reader.EndOfStream)
+                    text += reader.ReadLine()!;
+
+                foreach (char item in text)
                 {
-                    if (IsWhiteSpaceCharacter(temp[i]))
+                    if (char.IsWhiteSpace(item) || item == 0)
                         continue;
 
-                    if (!dictionary.ContainsKey(temp[i]))
+                    if (dictionary.ContainsKey(item))
                     {
-                        count = 0;
-                        for (int j = 0; j < text.Length; j++)
-                        {
-                            if (text[j] == temp[i])
-                                count++;
-                        }
-
-                        dictionary.Add(temp[i], count);
+                        dictionary[item]++;
+                    }
+                    else
+                    {
+                        dictionary[item] = 1;
                     }
                 }
             }
+            finally
+            {
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+                reader.Close();
+            }
         }
-        stream.Seek(originalPosition, SeekOrigin.Begin);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not create dictionary:\n Error: {ex.Message}");
+        }
 
         var sortedByCount = dictionary.OrderByDescending(x => x.Value);
         var sortedDictionary = sortedByCount.ToDictionary(x => x.Key, x => x.Value);
-        reader.Close();
 
         return sortedDictionary;
     }
@@ -146,7 +196,15 @@ static class StreamHelper
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
         if (!stream.CanRead)
-            throw new ArgumentException("The stream must be readable.", nameof(stream));
+            throw new ArgumentException("The stream must be Readable.", nameof(stream));
+    }
+
+    private static void IsNotNullAndIsWritable(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        if (!stream.CanWrite)
+            throw new ArgumentException("The stream must be Writable.", nameof(stream));
     }
 
     private static bool IsWhiteSpaceCharacter(char text) => !char.IsLetterOrDigit(text) && !char.IsPunctuation(text) && !char.IsSymbol(text);
