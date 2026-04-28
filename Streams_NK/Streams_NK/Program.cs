@@ -9,8 +9,8 @@ internal class Program
     {
         try
         {
-            FileStream read = new FileStream(ReadPath, FileMode.Open, FileAccess.Read);
-            FileStream write = new FileStream(WritePath, FileMode.Open, FileAccess.Write);
+            using FileStream read = new FileStream(ReadPath, FileMode.Open, FileAccess.Read);
+            using FileStream write = new FileStream(WritePath, FileMode.Open, FileAccess.Write);
 
             StreamHelper.RewriteWithLineNumbersToNewStream(read, write);
             Console.WriteLine($"Rewriten text to New Text File\n{File.ReadAllText(WritePath)}");

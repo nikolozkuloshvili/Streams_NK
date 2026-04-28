@@ -9,7 +9,7 @@ static class StreamHelper
         {
             IsNotNullAndIsReadable(stream);
             var originalPosition = stream.Position;
-            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            using StreamReader reader = new StreamReader(stream, leaveOpen: true);
             try
             {
                 stream.Seek(0, SeekOrigin.Begin);
@@ -23,7 +23,6 @@ static class StreamHelper
             finally
             {
                 stream.Seek(originalPosition, SeekOrigin.Begin);
-                reader.Close();
             }
         }
         catch (Exception ex)
@@ -43,8 +42,8 @@ static class StreamHelper
 
             var originalPosition = read.Position;
 
-            StreamReader reader = new StreamReader(read, leaveOpen: true);
-            StreamWriter writer = new StreamWriter(write);
+            using StreamReader reader = new StreamReader(read, leaveOpen: true);
+            using StreamWriter writer = new StreamWriter(write);
             try
             {
                 read.Seek(0, SeekOrigin.Begin);
@@ -59,7 +58,6 @@ static class StreamHelper
             finally
             {
                 read.Seek(originalPosition, SeekOrigin.Begin);
-                reader.Close(); writer.Close();
             }
         }
         catch (Exception ex)
@@ -77,7 +75,7 @@ static class StreamHelper
 
             var originalPosition = stream.Position;
 
-            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            using StreamReader reader = new StreamReader(stream, leaveOpen: true);
             try
             {
                 stream.Seek(0, SeekOrigin.Begin);
@@ -95,7 +93,6 @@ static class StreamHelper
             finally
             {
                 stream.Seek(originalPosition, SeekOrigin.Begin);
-                reader.Close();
             }
         }
         catch (Exception ex)
@@ -115,7 +112,7 @@ static class StreamHelper
 
             var originalPosition = stream.Position;
 
-            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            using StreamReader reader = new StreamReader(stream, leaveOpen: true);
             try
             {
                 stream.Seek(0, SeekOrigin.Begin);
@@ -129,7 +126,6 @@ static class StreamHelper
             finally
             {
                 stream.Seek(originalPosition, SeekOrigin.Begin);
-                reader.Close();
             }
         }
         catch (Exception ex)
@@ -150,7 +146,7 @@ static class StreamHelper
 
             var originalPosition = stream.Position;
 
-            StreamReader reader = new StreamReader(stream, leaveOpen: true);
+            using StreamReader reader = new StreamReader(stream, leaveOpen: true);
             try
             {
                 stream.Seek(0, SeekOrigin.Begin);
@@ -177,7 +173,6 @@ static class StreamHelper
             finally
             {
                 stream.Seek(originalPosition, SeekOrigin.Begin);
-                reader.Close();
             }
         }
         catch (Exception ex)
