@@ -6,7 +6,6 @@ public static class InputHelper
     {
         while (true)
         {
-            Console.WriteLine();
             Console.WriteLine("What you want to do:");
             Console.WriteLine("1 - Encrypt");
             Console.WriteLine("2 - UnEncrypt");
@@ -30,13 +29,15 @@ public static class InputHelper
             {
                 Console.Write("Enter the file path: ");
                 string readPath = Console.ReadLine() ?? "";
-                using FileStream stream = new FileStream(readPath, FileMode.Open);
-                return readPath;
+                if (File.Exists(readPath))
+                    return readPath;
+                else
+                    Console.WriteLine("Wrong path: Try Again");
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine($"Error Message:\t{ex.Message}");
+                Console.WriteLine($"ReadPath Error Message: {ex.Message}");
             }
         }
     }
@@ -61,13 +62,17 @@ public static class InputHelper
             try
             {
                 Console.Write("Enter the write path: ");
+
                 string writePath = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(writePath))
+                    throw new ArgumentNullException(nameof(writePath));
+
                 return writePath;
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine($"Error Message:\t{ex.Message}");
+                Console.WriteLine($"WritePath Error Message: {ex.Message}");
             }
         }
     }
