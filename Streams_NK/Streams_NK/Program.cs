@@ -3,33 +3,34 @@
 public static class Program
 {
     private const string _password = "123";
-    public static string ReadPath = null!;
-    public static string WritePath = null!;
-    public static int Choice = default;
+    private static string _readPath = null!;
+    private static string _writePath = null!;
+    private static int _choice = default;
+
     static void Main()
     {
         while (true)
         {
             try
             {
-                InputHelper.GetUserChoice();
+                _choice = InputHelper.GetUserChoice();
 
-                InputHelper.GetReadPath();
+                _readPath = InputHelper.GetReadPath();
 
                 InputHelper.ValidatePassword(_password);
 
-                if (Choice == 1)
+                if (_choice == 1)
                 {
                     FileEncrypter();
                     Console.WriteLine();
-                    Console.WriteLine($"Encrypted Text: {File.ReadAllText(WritePath)}");
+                    Console.WriteLine($"Encrypted Text: {File.ReadAllText(_writePath)}");
                 }
 
-                if (Choice == 2)
+                if (_choice == 2)
                 {
                     FileUnecrypter();
                     Console.WriteLine();
-                    Console.WriteLine($"Unecrypted Text: {File.ReadAllText(WritePath)}");
+                    Console.WriteLine($"Unecrypted Text: {File.ReadAllText(_writePath)}");
                 }
 
                 Console.WriteLine();
@@ -52,10 +53,10 @@ public static class Program
         string textToUnencrypt = null!;
         string unEncryptedText = null!;
 
-        using StreamReader reader = new StreamReader(ReadPath);
+        using StreamReader reader = new StreamReader(_readPath);
 
-        InputHelper.GetWritePath();
-        using FileStream file = new FileStream(WritePath, FileMode.Create);
+        _writePath = InputHelper.GetWritePath();
+        using FileStream file = new FileStream(_writePath, FileMode.Create);
         var originalPosition = file.Position;
 
         using StreamWriter writer = new StreamWriter(file);
@@ -85,10 +86,10 @@ public static class Program
         string textToncrypt = null!;
         string encryptedText = null!;
 
-        using StreamReader reader = new StreamReader(ReadPath);
+        using StreamReader reader = new StreamReader(_readPath);
 
-        InputHelper.GetWritePath();
-        using FileStream file = new FileStream(WritePath, FileMode.Create);
+        _writePath = InputHelper.GetWritePath();
+        using FileStream file = new FileStream(_writePath, FileMode.Create);
         var originalPosition = file.Position;
 
         using StreamWriter writer = new StreamWriter(file);

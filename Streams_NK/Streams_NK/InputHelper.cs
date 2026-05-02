@@ -2,7 +2,7 @@
 
 public static class InputHelper
 {
-    public static void GetUserChoice()
+    public static int GetUserChoice()
     {
         while (true)
         {
@@ -18,21 +18,20 @@ public static class InputHelper
                 continue;
             }
 
-            Program.Choice = Choice;
-            break;
+            return Choice;
         }
     }
 
-    public static void GetReadPath()
+    public static string GetReadPath()
     {
         while (true)
         {
             try
             {
                 Console.Write("Enter the file path: ");
-                Program.ReadPath = Console.ReadLine() ?? "";
-                using FileStream stream = new FileStream(Program.ReadPath, FileMode.Open);
-                break;
+                string readPath = Console.ReadLine() ?? "";
+                using FileStream stream = new FileStream(readPath, FileMode.Open);
+                return readPath;
             }
 
             catch (Exception ex)
@@ -55,15 +54,15 @@ public static class InputHelper
         }
     }
 
-    public static void GetWritePath()
+    public static string GetWritePath()
     {
         while (true)
         {
             try
             {
                 Console.Write("Enter the write path: ");
-                Program.WritePath = Console.ReadLine() ?? "";
-                break;
+                string writePath = Console.ReadLine() ?? "";
+                return writePath;
             }
 
             catch (Exception ex)
