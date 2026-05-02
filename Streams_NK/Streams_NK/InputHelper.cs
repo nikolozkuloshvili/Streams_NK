@@ -54,26 +54,4 @@ public static class InputHelper
                 Console.WriteLine("Incorrect Password: Try Again.");
         }
     }
-
-    public static string GetWritePath()
-    {
-        while (true)
-        {
-            try
-            {
-                Console.Write("Enter the write path: ");
-
-                string writePath = Console.ReadLine() ?? "";
-                if (string.IsNullOrWhiteSpace(writePath))
-                    throw new ArgumentNullException(nameof(writePath));
-
-                return writePath;
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine($"WritePath Error Message: {ex.Message}");
-            }
-        }
-    }
 }

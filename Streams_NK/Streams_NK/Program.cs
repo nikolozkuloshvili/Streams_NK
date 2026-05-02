@@ -62,11 +62,10 @@ internal static class Program
         {
             file.Seek(0, SeekOrigin.Begin);
 
-            string unEncryptedText = null!;
             while (!reader.EndOfStream)
             {
                 string textToUnencrypt = reader.ReadLine()!;
-                unEncryptedText = "";
+                string unEncryptedText = "";
                 foreach (char c in textToUnencrypt)
                     unEncryptedText += (char)((c + 50) / 2);
 
@@ -92,11 +91,10 @@ internal static class Program
         {
             file.Seek(0, SeekOrigin.Begin);
 
-            string encryptedText = null!;
             while (!reader.EndOfStream)
             {
                 string textToncrypt = reader.ReadLine()!;
-                encryptedText = "";
+                string encryptedText = "";
                 foreach (char c in textToncrypt)
                     encryptedText += (char)((c * 2) - 50);
 
