@@ -1,35 +1,73 @@
-﻿namespace Streams_NK;
+﻿namespace Encryption;
 
-internal class Program
+public static class Program
 {
-    const string ReadPath = @"G:\ToRead.txt";
-    const string WritePath = @"G:\ToWrite.txt";
-
+    private const string Password = "123";
+    public static string ReadPath = null!;
+    public static string WritePath = null!;
+    public static int Choice = default;
     static void Main()
     {
         try
         {
-            using FileStream read = new FileStream(ReadPath, FileMode.Open, FileAccess.Read);
-            using FileStream write = new FileStream(WritePath, FileMode.Open, FileAccess.Write);
+            InputHelper.GetUserChoice();
 
-            StreamHelper.RewriteWithLineNumbersToNewStream(read, write);
-            Console.WriteLine($"Rewriten text to New Text File\n{File.ReadAllText(WritePath)}");
+            InputHelper.GetReadPath();
 
-            Console.WriteLine($"Total amount of Characters = {StreamHelper.GetCharachtersCount(read)}");
-            Console.WriteLine();
+            InputHelper.ValidatePassword(Password);
 
-            Console.WriteLine($"Total amount of Words = {StreamHelper.GetWordsCount(read)}");
-            Console.WriteLine();
+            if (Choice == 1)
+                FileEncrypter();
 
-            Console.WriteLine($"Sum of Numbers = {StreamHelper.GetNumbersSum(read)}");
-            Console.WriteLine();
-
-            foreach (var item in StreamHelper.ToCharDictionarySortedByCount(read))
-                Console.WriteLine($"{item.Key} = {item.Value}");
+            if (Choice == 2)
+                FileUnEcrypter();
         }
+
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error Message:\t{ex.Message}");
+            Console.WriteLine($"Error Type:\t{ex.GetType().Name}");
+        }
+    }
+
+    private static void FileUnEcrypter()
+    {
+        string textToUnencrypt = null!;
+        string unEncryptedText = null!;
+
+        using StreamReader reader = new StreamReader(ReadPath);
+
+        InputHelper.GetWritePath();
+        using FileStream file = new FileStream(WritePath, FileMode.Create);
+        using StreamWriter writer = new StreamWriter(file);
+
+        while (!reader.EndOfStream)
+        {
+            textToUnencrypt += reader.ReadLine();
+            foreach (char c in textToUnencrypt)
+                unEncryptedText += (char)((c + 50) / 2);
+
+            writer.Write(unEncryptedText);
+        }
+    }
+    private static void FileEncrypter()
+    {
+        string textToncrypt = null!; 
+        string encryptedText = null!;
+
+        using StreamReader reader = new StreamReader(ReadPath);
+
+        InputHelper.GetWritePath();
+        using FileStream file = new FileStream(WritePath, FileMode.Create);
+        using StreamWriter writer = new StreamWriter(file);
+
+        while (!reader.EndOfStream)
+        {
+            textToncrypt += reader.ReadLine();
+            foreach (char c in textToncrypt)
+                encryptedText += (char)((c * 2) - 50);
+
+            writer.Write(encryptedText);
         }
     }
 }
