@@ -6,6 +6,7 @@ public static class InputHelper
     {
         while (true)
         {
+            Console.WriteLine();
             Console.WriteLine("What you want to do:");
             Console.WriteLine("1 - Encrypt");
             Console.WriteLine("2 - UnEncrypt");

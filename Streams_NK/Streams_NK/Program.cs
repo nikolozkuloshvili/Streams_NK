@@ -8,29 +8,46 @@ public static class Program
     public static int Choice = default;
     static void Main()
     {
-        try
+        while (true)
         {
-            InputHelper.GetUserChoice();
+            try
+            {
+                InputHelper.GetUserChoice();
 
-            InputHelper.GetReadPath();
+                InputHelper.GetReadPath();
 
-            InputHelper.ValidatePassword(Password);
+                InputHelper.ValidatePassword(Password);
 
-            if (Choice == 1)
-                FileEncrypter();
+                if (Choice == 1)
+                {
+                    FileEncrypter();
+                    Console.WriteLine();
+                    Console.WriteLine($"Encrypted Text: {File.ReadAllText(WritePath)}");
+                }
 
-            if (Choice == 2)
-                FileUnEcrypter();
-        }
+                if (Choice == 2)
+                {
+                    FileUnecrypter();
+                    Console.WriteLine();
+                    Console.WriteLine($"Unecrypted Text: {File.ReadAllText(WritePath)}");
+                }
 
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error Message:\t{ex.Message}");
-            Console.WriteLine($"Error Type:\t{ex.GetType().Name}");
+                Console.WriteLine();
+                Console.WriteLine("Do you want to continue? (Y/N)");
+                string? again = Console.ReadLine();
+                if (!string.Equals(again, "Y", StringComparison.OrdinalIgnoreCase))
+                    break;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error Message:\t{ex.Message}");
+                Console.WriteLine($"Error Type:\t{ex.GetType().Name}");
+            }
         }
     }
 
-    private static void FileUnEcrypter()
+    private static void FileUnecrypter()
     {
         string textToUnencrypt = null!;
         string unEncryptedText = null!;
@@ -52,9 +69,9 @@ public static class Program
                 textToUnencrypt += reader.ReadLine();
                 foreach (char c in textToUnencrypt)
                     unEncryptedText += (char)((c + 50) / 2);
-
-                writer.Write(unEncryptedText);
             }
+
+            writer.Write(unEncryptedText);
         }
 
         finally
@@ -85,9 +102,9 @@ public static class Program
                 textToncrypt += reader.ReadLine();
                 foreach (char c in textToncrypt)
                     encryptedText += (char)((c * 2) - 50);
-
-                writer.Write(encryptedText);
             }
+
+            writer.Write(encryptedText);
         }
 
         finally
