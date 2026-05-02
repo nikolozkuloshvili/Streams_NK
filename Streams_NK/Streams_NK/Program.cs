@@ -39,35 +39,60 @@ public static class Program
 
         InputHelper.GetWritePath();
         using FileStream file = new FileStream(WritePath, FileMode.Create);
+        var originalPosition = file.Position;
+
         using StreamWriter writer = new StreamWriter(file);
 
-        while (!reader.EndOfStream)
+        try
         {
-            textToUnencrypt += reader.ReadLine();
-            foreach (char c in textToUnencrypt)
-                unEncryptedText += (char)((c + 50) / 2);
+            file.Seek(0, SeekOrigin.Begin);
 
-            writer.Write(unEncryptedText);
+            while (!reader.EndOfStream)
+            {
+                textToUnencrypt += reader.ReadLine();
+                foreach (char c in textToUnencrypt)
+                    unEncryptedText += (char)((c + 50) / 2);
+
+                writer.Write(unEncryptedText);
+            }
+        }
+
+        finally
+        {
+            file.Seek(originalPosition, SeekOrigin.Begin);
         }
     }
+
     private static void FileEncrypter()
     {
-        string textToncrypt = null!; 
+        string textToncrypt = null!;
         string encryptedText = null!;
 
         using StreamReader reader = new StreamReader(ReadPath);
 
         InputHelper.GetWritePath();
         using FileStream file = new FileStream(WritePath, FileMode.Create);
+        var originalPosition = file.Position;
+
         using StreamWriter writer = new StreamWriter(file);
 
-        while (!reader.EndOfStream)
+        try
         {
-            textToncrypt += reader.ReadLine();
-            foreach (char c in textToncrypt)
-                encryptedText += (char)((c * 2) - 50);
+            file.Seek(0, SeekOrigin.Begin);
 
-            writer.Write(encryptedText);
+            while (!reader.EndOfStream)
+            {
+                textToncrypt += reader.ReadLine();
+                foreach (char c in textToncrypt)
+                    encryptedText += (char)((c * 2) - 50);
+
+                writer.Write(encryptedText);
+            }
+        }
+
+        finally
+        {
+            file.Seek(originalPosition, SeekOrigin.Begin);
         }
     }
 }
