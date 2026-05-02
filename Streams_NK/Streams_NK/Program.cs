@@ -13,12 +13,14 @@ internal static class Program
                 int choice = InputHelper.GetUserChoice();
 
                 string readPath = InputHelper.GetReadPath();
-                string writePath = InputHelper.GetWritePath();
+                string directory = Path.GetDirectoryName(readPath)!;
+                string fileName = Path.GetFileName(readPath);
 
                 InputHelper.ValidatePassword(_password);
 
                 if (choice == 1)
                 {
+                    string writePath = directory + "Encrypted_" + fileName;
                     FileEncrypter(readPath, writePath);
                     Console.WriteLine();
                     Console.WriteLine($"Encrypted Text:\n{File.ReadAllText(writePath)}");
@@ -26,6 +28,7 @@ internal static class Program
 
                 if (choice == 2)
                 {
+                    string writePath = directory + "Unecrypted_" + fileName;
                     FileUnecrypter(readPath, writePath);
                     Console.WriteLine();
                     Console.WriteLine($"Unecrypted Text:\n{File.ReadAllText(writePath)}");
@@ -80,7 +83,6 @@ internal static class Program
     private static void FileEncrypter(string readPath, string writePath)
     {
         using StreamReader reader = new StreamReader(readPath);
-
         using FileStream file = new FileStream(writePath, FileMode.Create);
         var originalPosition = file.Position;
 
