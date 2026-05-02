@@ -2,7 +2,7 @@
 
 public static class Program
 {
-    private const string Password = "123";
+    private const string _password = "123";
     public static string ReadPath = null!;
     public static string WritePath = null!;
     public static int Choice = default;
@@ -16,7 +16,7 @@ public static class Program
 
                 InputHelper.GetReadPath();
 
-                InputHelper.ValidatePassword(Password);
+                InputHelper.ValidatePassword(_password);
 
                 if (Choice == 1)
                 {
