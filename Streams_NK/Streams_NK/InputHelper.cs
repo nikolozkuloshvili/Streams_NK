@@ -25,20 +25,12 @@ public static class InputHelper
     {
         while (true)
         {
-            try
-            {
-                Console.Write("Enter the file path: ");
-                string readPath = Console.ReadLine() ?? "";
-                if (File.Exists(readPath))
-                    return readPath;
-                else
-                    Console.WriteLine("Wrong path: Try Again");
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine($"ReadPath Error Message: {ex.Message}");
-            }
+            Console.Write("Enter the file path: ");
+            string readPath = Console.ReadLine() ?? "";
+            if (File.Exists(readPath))
+                return readPath;
+            else
+                Console.WriteLine("Wrong path: Try Again");
         }
     }
 
