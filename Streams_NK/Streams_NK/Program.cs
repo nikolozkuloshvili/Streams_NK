@@ -1,4 +1,6 @@
-﻿namespace Encryption;
+﻿using System.Security.Authentication;
+
+namespace Encryption;
 
 internal static class Program
 {
@@ -12,15 +14,21 @@ internal static class Program
             {
                 int choice = InputHelper.GetUserChoice();
 
+                if (choice == 0)
+                    break;
+
                 string readPath = InputHelper.GetReadPath();
+                if (readPath == "0")
+                    break;
+
                 string fileName = Path.GetFileName(readPath);
-                string directory = readPath.Replace(fileName, "");
+                string folderPath = readPath.Replace(fileName, "");
 
                 InputHelper.ValidatePassword(_password);
 
                 if (choice == 1)
                 {
-                    string writePath = directory + "Encrypted_" + fileName;
+                    string writePath = folderPath + "Encrypted_" + fileName;
                     FileEncrypter(readPath, writePath);
                     Console.WriteLine();
                     Console.WriteLine($"Encrypted Text:\n{File.ReadAllText(writePath)}");
@@ -28,7 +36,7 @@ internal static class Program
 
                 if (choice == 2)
                 {
-                    string writePath = directory + "Unecrypted_" + fileName;
+                    string writePath = folderPath + "Unecrypted_" + fileName;
                     FileUnecrypter(readPath, writePath);
                     Console.WriteLine();
                     Console.WriteLine($"Unecrypted Text:\n{File.ReadAllText(writePath)}");
@@ -39,6 +47,12 @@ internal static class Program
                 string? again = Console.ReadLine();
                 if (!string.Equals(again, "Y", StringComparison.OrdinalIgnoreCase))
                     break;
+            }
+
+            catch (AuthenticationException)
+            {
+                Console.WriteLine("Too many password failed attempts: Try again later.");
+                break;
             }
 
             catch (Exception ex)
