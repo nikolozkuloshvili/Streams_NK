@@ -13,7 +13,6 @@ internal static class Program
             try
             {
                 int choice = InputHelper.GetUserChoice();
-
                 if (choice == 0)
                     break;
 
