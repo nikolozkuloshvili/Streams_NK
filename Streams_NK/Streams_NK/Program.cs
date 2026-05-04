@@ -47,13 +47,11 @@ internal static class Program
                 if (!string.Equals(again, "Y", StringComparison.OrdinalIgnoreCase))
                     break;
             }
-
             catch (AuthenticationException)
             {
                 Console.WriteLine("Too many password failed attempts: Try again later.");
                 break;
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine($"Error Message:\t{ex.Message}");
