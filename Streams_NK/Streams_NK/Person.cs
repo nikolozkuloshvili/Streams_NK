@@ -3,11 +3,11 @@
 public class Person
 {
     public int Id { get; }
-    public int ParentId { get; set; }
-    private string _firstName { get; set; }
-    private string _lastName { get; set; }
-    private DateTime _dateOfBirth { get; set; }
-    private Gender _gender { get; set; }
+    public int ParentId { get; private set; }
+    public string FirstName { get; }
+    public string LastName { get; }
+    public DateTime DateOfBirth { get; }
+    public Gender Gender { get; }
     public List<Person> Children { get; set; } = new List<Person>();
     public Person(int id, string firstName, string lastName, DateTime dateOfBirth, Gender gender)
     {
@@ -26,14 +26,14 @@ public class Person
         if (dateOfBirth < DateTime.Now.AddYears(-120))
             throw new ArgumentOutOfRangeException(nameof(dateOfBirth), "Date of birth cannot be more than 120 years ago.");
 
-        _dateOfBirth = dateOfBirth;
+        DateOfBirth = dateOfBirth;
 
         if (!Enum.IsDefined(typeof(Gender), gender))
             throw new ArgumentOutOfRangeException(nameof(gender), "Invalid gender value.");
 
-        _firstName = firstName;
-        _lastName = lastName;
-        _gender = gender;
+        FirstName = firstName;
+        LastName = lastName;
+        Gender = gender;
         Id = id;
     }
 
@@ -63,7 +63,7 @@ public class Person
         if (child.Id == ParentId)
             throw new InvalidOperationException("Child cannot have parent as a child.");
 
-        if (child._dateOfBirth <= this._dateOfBirth)
+        if (child.DateOfBirth <= this.DateOfBirth)
             throw new InvalidOperationException("Child must be younger than the parent.");
 
         child.ParentId = this.Id;
@@ -73,7 +73,7 @@ public class Person
 
     public override string ToString()
     {
-        return $"{_firstName} {_lastName} (Id: {Id}, ParentId: {ParentId}, DOB: {_dateOfBirth.ToShortDateString()}, Gender: {_gender})";
+        return $"{FirstName} {LastName} (Id: {Id}, ParentId: {ParentId}, DOB: {DateOfBirth.ToShortDateString()}, Gender: {Gender})";
     }
 }
 
