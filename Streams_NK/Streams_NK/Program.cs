@@ -7,19 +7,12 @@ internal class Program
         try
         {
             PersonList list = new PersonList();
-            Person tamta = new Person(1, "Tamta", "Kuloshvili", new DateTime(2000, 12, 12), Gender.Female);
-            Person anano = new Person(2, "Anano", "Kuloshvili", new DateTime(2001, 12, 12), Gender.Female);
-            Person zviad = new Person(4, "Zviad", "Kuloshvili", new DateTime(2000, 3, 29), Gender.Male);
-            Person kid1 = new Person(3, "Kid1", "Kuloshvili", new DateTime(2020, 1, 1), Gender.Male);
-            Person kid2 = new Person(5, "Kid2", "Kuloshvili", new DateTime(2021, 1, 1), Gender.Female);
+            Person person1 = new Person(id: 1,parentId: 1, firstName: "John", lastName: "Doe", dateOfBirth: new DateTime(1990, 1, 1),Gender.Male);
+            Person person2 = new Person(id: 2, firstName: "John", lastName: "Doe", dateOfBirth: new DateTime(1990, 1, 1), Gender.Male);
 
-            zviad.AddChild(tamta);
-
-            list.Add(zviad);
-            list.Add(tamta);
-            tamta.AddChild(anano);
-            tamta.AddChild(kid2);
-            list.Add(kid1);
+            list.Add(person1);
+            list.Add(person2);
+            person1.AddChild(person2);
 
             using var file = new FileStream("Saved.txt", FileMode.Create);
 
