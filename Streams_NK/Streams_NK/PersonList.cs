@@ -1,26 +1,47 @@
-﻿namespace FamilyTree;
+﻿using System.Collections;
 
-public class PersonList : List<Person>
+namespace FamilyTree;
+
+public class PersonList : IList<Person>
 {
+    private List<Person> _list { get; set; } = new List<Person>();
+    public int Count => _list.Count;
+    public bool IsReadOnly => true;
 
-    public new void Add(Person person)
+    public Person this[int index]
     {
-        ValidatePersonIsNotInTheListAndIsNotNull(person);
-        base.Add(person);
+        get => _list[index];
+        set => throw new ArgumentException("The list is read-only.");
     }
 
-    public new void Insert(int index, Person person)
+    public void Add(Person person)
     {
-        ValidatePersonIsNotInTheListAndIsNotNull(person);
-        ArgumentOutOfRangeException.ThrowIfNegative(index);
-        base.Insert(index, person);
+        ValidatePerson(person);
+        _list.Add(person);
     }
 
-    public new void InsertRange(int index, IEnumerable<Person> person)
+    public void Insert(int index, Person person)
     {
-        ArgumentNullException.ThrowIfNull(person);
+        ValidatePerson(person);
         ArgumentOutOfRangeException.ThrowIfNegative(index);
-        base.InsertRange(index, person);
+        _list.Insert(index, person);
+    }
+
+    public void InsertRange(int index, IEnumerable<Person> persons)
+    {
+        ArgumentNullException.ThrowIfNull(persons);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+
+        if (index == Count)
+            throw new ArgumentOutOfRangeException(nameof(index), "Index cannot be equal to the count of the list.");
+
+
+        foreach (var person in persons)
+        {
+            ValidatePerson(person);
+            Insert(index, person);
+            index++;
+        }
     }
 
 
@@ -43,7 +64,7 @@ public class PersonList : List<Person>
             using StreamWriter writer = new StreamWriter(stream, leaveOpen: true);
 
             HashSet<int> personsId = new HashSet<int>();
-            WriteGenerationTree(this, writer, personsId);
+            WriteGenerationTree(_list, writer, personsId);
         }
         finally
         {
@@ -93,18 +114,18 @@ public class PersonList : List<Person>
         Load(fileStream);
     }
 
-    private void ValidatePersonIsNotInTheListAndIsNotNull(Person person)
+    private void ValidatePerson(Person person)
     {
         ArgumentNullException.ThrowIfNull(person);
 
-        foreach (var p in this)
+        foreach (var p in _list)
         {
             if (p.Id == person.Id)
                 throw new ArgumentException($"A person with Id {person.Id} already exists.");
         }
     }
 
-    private void WriteGenerationTree(List<Person> family, StreamWriter writer, HashSet<int> personsId)
+    private void WriteGenerationTree(IEnumerable<Person> family, StreamWriter writer, HashSet<int> personsId)
     {
         foreach (var person in family)
         {
@@ -119,4 +140,20 @@ public class PersonList : List<Person>
             }
         }
     }
+
+    public int IndexOf(Person item) => _list.IndexOf(item);
+
+    public void RemoveAt(int index) => _list.RemoveAt(index);
+
+    public void Clear() => _list.Clear();
+
+    public bool Contains(Person item) => _list.Contains(item);
+
+    public void CopyTo(Person[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
+
+    public bool Remove(Person item) => _list.Remove(item);
+
+    public IEnumerator<Person> GetEnumerator() => _list.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
 }

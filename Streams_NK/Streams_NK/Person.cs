@@ -8,7 +8,9 @@ public class Person
     public string LastName { get; }
     public DateTime DateOfBirth { get; }
     public Gender Gender { get; }
-    public List<Person> Children { get; set; } = new List<Person>();
+    public IReadOnlyCollection<Person> Children => _children.AsReadOnly();
+
+    private readonly List<Person> _children = new List<Person>();
 
     public Person(int id, string firstName, string lastName, DateTime dateOfBirth, Gender gender)
     {
@@ -24,18 +26,14 @@ public class Person
         if (dateOfBirth > DateTime.Now)
             throw new ArgumentOutOfRangeException(nameof(dateOfBirth), "Date of birth cannot be in the future.");
 
-        if (dateOfBirth < DateTime.Now.AddYears(-120))
-            throw new ArgumentOutOfRangeException(nameof(dateOfBirth), "Date of birth cannot be more than 120 years ago.");
-
-        DateOfBirth = dateOfBirth;
-
         if (!Enum.IsDefined(typeof(Gender), gender))
             throw new ArgumentOutOfRangeException(nameof(gender), "Invalid gender value.");
 
+        Id = id;
         FirstName = firstName;
         LastName = lastName;
+        DateOfBirth = dateOfBirth;
         Gender = gender;
-        Id = id;
     }
 
     public Person(int id, int parentId, string firstName, string lastName, DateTime dateOfBirth, Gender gender) : this(id, firstName, lastName, dateOfBirth, gender)
@@ -49,7 +47,7 @@ public class Person
 
     public void AddChild(Person child)
     {
-        foreach (var kid in Children)
+        foreach (var kid in _children)
         {
             if (child.Id == kid.Id)
                 throw new InvalidOperationException($"Child with Id {child.Id} is already added.");
@@ -69,7 +67,7 @@ public class Person
 
         child.ParentId = this.Id;
 
-        Children.Add(child);
+        _children.Add(child);
     }
 
     public override string ToString()
