@@ -9,6 +9,7 @@ public class Person
     public DateTime DateOfBirth { get; }
     public Gender Gender { get; }
     public List<Person> Children { get; set; } = new List<Person>();
+
     public Person(int id, string firstName, string lastName, DateTime dateOfBirth, Gender gender)
     {
         if (id <= 0)
